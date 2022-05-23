@@ -3,6 +3,7 @@ package com.example.pairscardgame
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
@@ -18,5 +19,9 @@ class MainActivity : AppCompatActivity() {
         rvBoard = findViewById(R.id.rvBoard)
         tvNumFlips = findViewById(R.id.tvNumFlips)
         tvNumPairs = findViewById(R.id.tvNumPairs)
+
+        rvBoard.adapter = CardBoardAdaptor(this, 8)
+        rvBoard.setHasFixedSize(true)
+        rvBoard.layoutManager = GridLayoutManager(this, 2)
     }
 }
