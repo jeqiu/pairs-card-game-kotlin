@@ -3,8 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Portfolio/AndroidStudioProjects/PairsCardGame/app/src/main/res/drawable-anydpi/ic_card.xml" value="0.191" />
+        <entry key="..\:/Portfolio/AndroidStudioProjects/PairsCardGame/app/src/main/res/drawable/ic_at.xml" value="0.191" />
+        <entry key="..\:/Portfolio/AndroidStudioProjects/PairsCardGame/app/src/main/res/drawable/ic_bolt.xml" value="0.13" />
+        <entry key="..\:/Portfolio/AndroidStudioProjects/PairsCardGame/app/src/main/res/drawable/ic_moon.xml" value="0.13" />
         <entry key="..\:/Portfolio/AndroidStudioProjects/PairsCardGame/app/src/main/res/layout/activity_main.xml" value="0.22" />
-        <entry key="..\:/Portfolio/AndroidStudioProjects/PairsCardGame/app/src/main/res/layout/memory_card.xml" value="0.2" />
+        <entry key="..\:/Portfolio/AndroidStudioProjects/PairsCardGame/app/src/main/res/layout/memory_card.xml" value="0.4466666666666667" />
       </map>
     </option>
   </component>
