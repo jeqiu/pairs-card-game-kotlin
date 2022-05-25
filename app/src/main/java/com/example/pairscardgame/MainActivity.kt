@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pairscardgame.models.BoardSize
+import com.example.pairscardgame.utils.DEFAULT_ICONS
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvNumFlips: TextView
     private lateinit var tvNumPairs: TextView
 
-    private var boardSize: BoardSize = BoardSize.MEDIUM
+    private var boardSize: BoardSize = BoardSize.BEGINNER
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +24,10 @@ class MainActivity : AppCompatActivity() {
         tvNumFlips = findViewById(R.id.tvNumFlips)
         tvNumPairs = findViewById(R.id.tvNumPairs)
 
-        rvBoard.adapter = CardBoardAdaptor(this, boardSize)
+        val chosenImages : List<Int> = DEFAULT_ICONS.shuffled().take(boardSize.getNumPairs())
+        val randomizedImages = (chosenImages + chosenImages).shuffled()
+
+        rvBoard.adapter = CardBoardAdaptor(this, boardSize, randomizedImages)
         rvBoard.setHasFixedSize(true)
         rvBoard.layoutManager = GridLayoutManager(this, boardSize.getWidth())
     }

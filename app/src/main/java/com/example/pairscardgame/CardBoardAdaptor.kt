@@ -11,7 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pairscardgame.models.BoardSize
 import kotlin.math.min
 
-class CardBoardAdaptor(private val context: Context, private val boardSize: BoardSize) :
+class CardBoardAdaptor(
+    private val context: Context,
+    private val boardSize: BoardSize,
+    private val cardImages: List<Int>
+) :
     RecyclerView.Adapter<CardBoardAdaptor.ViewHolder>() {
 
     companion object {
@@ -23,6 +27,7 @@ class CardBoardAdaptor(private val context: Context, private val boardSize: Boar
         private val imageButton = itemView.findViewById<ImageButton>(R.id.imageButton)
 
         fun bind(position: Int) {
+            imageButton.setImageResource(cardImages[position])
             imageButton.setOnClickListener {
                 Log.i(TAG, "Clicked on position $position")
             }
