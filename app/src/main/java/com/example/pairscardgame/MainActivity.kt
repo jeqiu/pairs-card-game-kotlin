@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvNumFlips: TextView
     private lateinit var tvNumPairs: TextView
 
-    private var boardSize: BoardSize = BoardSize.BEGINNER
+    private var boardSize: BoardSize = BoardSize.MEDIUM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

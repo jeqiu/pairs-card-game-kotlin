@@ -3,8 +3,23 @@ package com.example.pairscardgame.utils
 import com.example.pairscardgame.R
 
 val DEFAULT_ICONS = listOf(
-    R.drawable.granville_island_public_market,
-    R.drawable.chinatown,
-    R.drawable.canada_line_train,
-    R.drawable.grouse_mountain,
+    R.drawable.cypress_falls_park,
+    R.drawable.chinatown_garden,
+    R.drawable.buildings,
+    R.drawable.canadaplace_night,
+    R.drawable.english_bay,
+    R.drawable.expo_line_skytrain,
+    R.drawable.gastown,
+    R.drawable.granville_st,
+    R.drawable.liondance_1_,
+    R.drawable.international_village,
+    R.drawable.seabus,
+    R.drawable.lions_gate_bridge,
+    R.drawable.lynn_canyon,
+    R.drawable.science_world,
+    R.drawable.skytrain_1_,
+    R.drawable.stanley_park,
+    R.drawable.steamclock,
+    R.drawable.whistler_gondola,
+    R.drawable.vancouver_seaview,
 )
