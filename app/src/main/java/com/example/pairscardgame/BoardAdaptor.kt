@@ -7,29 +7,43 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pairscardgame.models.BoardSize
-import kotlin.math.min
+import com.example.pairscardgame.models.PairCard
 
-class CardBoardAdaptor(
+class BoardAdaptor(
     private val context: Context,
     private val boardSize: BoardSize,
-    private val cardImages: List<Int>
+    private val cards: List<PairCard>,
+    private val cardClickListener: CardClickListener
 ) :
-    RecyclerView.Adapter<CardBoardAdaptor.ViewHolder>() {
+    RecyclerView.Adapter<BoardAdaptor.ViewHolder>() {
 
     companion object {
-        private const val MARGIN_SIZE = 12
-        private const val TAG = "CardBoardAdaptor"
+        private const val MARGIN_SIZE = 10
+        private const val TAG = "BoardAdaptor"
+    }
+
+    interface CardClickListener {
+        fun onCardClick(position: Int)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imageButton = itemView.findViewById<ImageButton>(R.id.imageButton)
 
         fun bind(position: Int) {
-            imageButton.setImageResource(cardImages[position])
+            val gameCard = cards[position]
+            imageButton.setImageResource(if (gameCard.isFaceUp) gameCard.identifier else R.drawable.ic_card)
+
+            imageButton.alpha = if (gameCard.isMatched) .4f else 1.0f
+//            val colorStateList = if (gameCard.isMatched) ContextCompat.getColorStateList(context, R.color.color_gray) else null
+//            ViewCompat.setBackgroundTintList(imageButton, colorStateList)
+
             imageButton.setOnClickListener {
                 Log.i(TAG, "Clicked on position $position")
+                cardClickListener.onCardClick(position)
             }
         }
     }

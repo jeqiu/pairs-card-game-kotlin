@@ -2,7 +2,7 @@ package com.example.pairscardgame.utils
 
 import com.example.pairscardgame.R
 
-val DEFAULT_ICONS = listOf(
+val DEFAULT_IMAGES = listOf(
     R.drawable.cypress_falls_park,
     R.drawable.chinatown_garden,
     R.drawable.buildings,
