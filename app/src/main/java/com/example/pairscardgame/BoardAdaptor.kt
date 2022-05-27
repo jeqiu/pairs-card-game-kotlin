@@ -50,9 +50,15 @@ class BoardAdaptor(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val cardHeight = parent.height / boardSize.getHeight() - (2 * MARGIN_SIZE)
-        val cardWidth = cardHeight / 4 * 3
+        var cardWidth = cardHeight / 4 * 3
 //        val cardWidth = parent.width / 2 - (2 * MARGIN_SIZE)
 //        val cardSideLength = min(cardWidth, cardHeight)
+        if (cardWidth * boardSize.getWidth() > parent.width) {
+            cardWidth = cardHeight / 8 * 5
+        }
+        if (cardWidth * boardSize.getWidth() > parent.width) {
+            cardWidth = cardHeight / 2
+        }
         val view : View = LayoutInflater.from(context).inflate(R.layout.memory_card, parent, false)
         val layoutParams : ViewGroup.MarginLayoutParams = view.findViewById<CardView>(R.id.cardView).layoutParams as ViewGroup.MarginLayoutParams
         layoutParams.width = cardWidth
