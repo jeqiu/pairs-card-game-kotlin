@@ -7,6 +7,7 @@ class PairGame(private val boardSize: BoardSize) {
     val cards: List<PairCard>
     var numPairsFound = 0
 
+    private var numCardFlips = 0
     private var indexOfSingleFlippedCard: Int? = null
 
     init {
@@ -16,6 +17,7 @@ class PairGame(private val boardSize: BoardSize) {
     }
 
     fun flipCard(position: Int): Boolean {
+        numCardFlips++
         val card = cards[position]
         // 0 cards flipped over -> selected card is flipped over
         // 1 card already flipped over -> flip selected card over & check if match
@@ -58,5 +60,9 @@ class PairGame(private val boardSize: BoardSize) {
 
     fun isCardFaceUp(position: Int): Boolean {
         return cards[position].isFaceUp
+    }
+
+    fun getNumFlips(): Int {
+        return numCardFlips
     }
 }
