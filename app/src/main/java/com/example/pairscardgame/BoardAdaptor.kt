@@ -53,6 +53,7 @@ class BoardAdaptor(
         var cardWidth = cardHeight / 4 * 3
 //        val cardWidth = parent.width / 2 - (2 * MARGIN_SIZE)
 //        val cardSideLength = min(cardWidth, cardHeight)
+
         if (cardWidth * boardSize.getWidth() > parent.width) {
             cardWidth = cardHeight / 8 * 5
         }

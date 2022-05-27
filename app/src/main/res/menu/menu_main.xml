@@ -9,7 +9,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/mi_new_size"
-        android:title="Choose new difficulty" />
+        android:title="Select difficulty" />
     <item
         android:id="@+id/mi_custom_game"
         android:title="Create custom game"

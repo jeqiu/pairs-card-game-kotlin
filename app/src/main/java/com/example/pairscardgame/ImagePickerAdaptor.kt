@@ -12,8 +12,13 @@ import com.example.pairscardgame.models.BoardSize
 class ImagePickerAdaptor(
     private val context: Context,
     private val chosenImgUris: List<Uri>,
-    private val boardSize: BoardSize
+    private val boardSize: BoardSize,
+    private val imageClickListener: ImageClickListener
 ) : RecyclerView.Adapter<ImagePickerAdaptor.ViewHolder>() {
+
+    interface ImageClickListener {
+        fun onPlaceholderClicked()
+    }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val ivCustomImage = itemView.findViewById<ImageView>(R.id.ivCustomImage)
@@ -25,6 +30,7 @@ class ImagePickerAdaptor(
         fun bind() {
             ivCustomImage.setOnClickListener {
                 // launch intent to select photos
+                imageClickListener.onPlaceholderClicked()
             }
         }
     }
@@ -32,7 +38,7 @@ class ImagePickerAdaptor(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.card_image, parent, false)
 //        val cardWidth = parent.width / boardSize.getWidth()
-        val cardHeight = parent.height / boardSize.getHeight()
+        val cardHeight = parent.height / boardSize.getHeight() - (2 * 10) // MARGIN_SIZE
         var cardWidth = cardHeight / 4 * 3
         if (cardWidth * boardSize.getWidth() > parent.width) {
             cardWidth = cardHeight / 8 * 5
