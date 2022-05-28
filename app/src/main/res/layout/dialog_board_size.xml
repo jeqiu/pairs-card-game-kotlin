@@ -20,24 +20,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Beginner (4 x 2)" />
+            android:text="Beginner (8 cards)" />
 
         <RadioButton
             android:id="@+id/rbEasy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Easy (4 x 3)" />
+            android:text="Easy (12 cards)" />
 
         <RadioButton
             android:id="@+id/rbMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Medium (4 x 4)" />
+            android:text="Medium (16 cards)" />
 
         <RadioButton
             android:id="@+id/rbHard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hard (6 x 4)" />
+            android:text="Hard (24 cards)" />
     </RadioGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>

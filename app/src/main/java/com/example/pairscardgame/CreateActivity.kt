@@ -4,9 +4,16 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
+import android.text.Editable
+import android.text.InputFilter
+import android.text.TextWatcher
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
@@ -15,9 +22,14 @@ import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pairscardgame.models.BoardSize
+import com.example.pairscardgame.utils.BitmapScaler
 import com.example.pairscardgame.utils.EXTRA_BOARD_SIZE
 import com.example.pairscardgame.utils.isPermissionGranted
 import com.example.pairscardgame.utils.requestPermission
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import java.io.ByteArrayOutputStream
 
 class CreateActivity : AppCompatActivity() {
 
@@ -26,6 +38,8 @@ class CreateActivity : AppCompatActivity() {
         private const val PICK_PHOTO_CODE = 604
         private const val READ_EXTERNAL_PHOTOS_CODE = 248
         private const val READ_PHOTOS_PERMISSION = android.Manifest.permission.READ_EXTERNAL_STORAGE
+        private const val MIN_GAME_NAME_LENGTH = 3
+        private const val MAX_GAME_NAME_LENGTH = 14
     }
 
     private lateinit var rvImagePicker: RecyclerView
@@ -36,6 +50,8 @@ class CreateActivity : AppCompatActivity() {
     private lateinit var boardSize: BoardSize
     private var numImagesRequired = -1
     private val chosenImgUris = mutableListOf<Uri>()
+    private val storage = Firebase.storage
+    private val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +65,19 @@ class CreateActivity : AppCompatActivity() {
         boardSize = intent.getSerializableExtra(EXTRA_BOARD_SIZE) as BoardSize
         numImagesRequired = boardSize.getNumPairs()
         supportActionBar?.title = "Choose images (0 / $numImagesRequired)"
+
+        buttonSave.setOnClickListener {
+            saveDataToFirebase()
+        }
+        etGameName.filters = arrayOf(InputFilter.LengthFilter(MAX_GAME_NAME_LENGTH))
+        etGameName.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                buttonSave.isEnabled = shouldEnableSaveButton()
+            }
+        })
 
         adaptor = ImagePickerAdaptor(this, chosenImgUris, boardSize, object: ImagePickerAdaptor.ImageClickListener {
             override fun onPlaceholderClicked() {
@@ -114,6 +143,12 @@ class CreateActivity : AppCompatActivity() {
 
     private fun shouldEnableSaveButton(): Boolean {
         // returns whether we should enable the save button or not
+        if (chosenImgUris.size != numImagesRequired) {
+            return false
+        }
+        if (etGameName.text.isBlank() || etGameName.text.length < MIN_GAME_NAME_LENGTH) {
+            return false
+        }
         return true
     }
 
@@ -122,6 +157,59 @@ class CreateActivity : AppCompatActivity() {
         intent.type = "image/*"
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         startActivityForResult(Intent.createChooser(intent, "Choose images"), PICK_PHOTO_CODE)
+    }
+
+    private fun saveDataToFirebase() {
+        val customGameName = etGameName.text.toString()
+        var didEncounterError = false
+        val uploadedImagesUrls = mutableListOf<String>()
+        Log.i(TAG, "saveDataToFirebase")
+
+        for ((index, photoUri) in chosenImgUris.withIndex()) {
+            val imageByteArray = getImageByteArray(photoUri)
+            val filePath = "images/$customGameName/${System.currentTimeMillis()}-${index}.jpg"
+            val photoReference = storage.reference.child(filePath)
+            photoReference.putBytes(imageByteArray)
+                .continueWithTask { photoUploadTask ->
+                    Log.i(TAG, "Uploaded bytes: ${photoUploadTask.result?.bytesTransferred}")
+                    photoReference.downloadUrl
+                }.addOnCompleteListener { downloadUrlTask ->
+                    if (!downloadUrlTask.isSuccessful) {
+                        Log.e(TAG, "Exception with Firebase storage", downloadUrlTask.exception)
+                        Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show()
+                        didEncounterError = true
+                        return@addOnCompleteListener
+                    }
+                    if (didEncounterError) {
+                        return@addOnCompleteListener
+                    }
+                    val downloadUrl = downloadUrlTask.result.toString()
+                    uploadedImagesUrls.add(downloadUrl)
+                    Log.i(TAG, "Finished uploading $photoUri, num uploaded ${uploadedImagesUrls.size}")
+                    if (uploadedImagesUrls.size == chosenImgUris.size) {
+                        handleAllImagesUploaded(customGameName, uploadedImagesUrls)
+                    }
+                }
+        }
+    }
+
+    private fun handleAllImagesUploaded(gameName: String, imagesUrls: MutableList<String>) {
+        TODO("Not yet implemented")
+    }
+
+    private fun getImageByteArray(photoUri: Uri): ByteArray {
+        val originalBitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val source = ImageDecoder.createSource(contentResolver, photoUri)
+            ImageDecoder.decodeBitmap(source)
+        } else {
+            MediaStore.Images.Media.getBitmap(contentResolver, photoUri)
+        }
+        Log.i(TAG, "Original width ${originalBitmap.width} and height ${originalBitmap.height}")
+        val scaledBitmap = BitmapScaler.scaleToFitHeight(originalBitmap, 500)
+        Log.i(TAG, "Scaled width ${scaledBitmap.width} and height ${scaledBitmap.height}")
+        val byteOutputStream = ByteArrayOutputStream()
+        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 75, byteOutputStream)
+        return byteOutputStream.toByteArray()
     }
 
 }

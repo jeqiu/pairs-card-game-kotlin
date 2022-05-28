@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "284863068221",
+    "project_id": "matching-pairs-card-game",
+    "storage_bucket": "matching-pairs-card-game.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:284863068221:android:a459e758fa400dc05ed254",
+        "android_client_info": {
+          "package_name": "com.example.pairscardgame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "284863068221-htqpfmce91k3ilg0the0vpmmmskotp6e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAj8oCf0lBUNgMpAeuwrvoiYMnBbdqc_tM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "284863068221-htqpfmce91k3ilg0the0vpmmmskotp6e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
