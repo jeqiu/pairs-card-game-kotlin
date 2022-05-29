@@ -3,6 +3,7 @@ package com.example.pairscardgame.utils
 import com.example.pairscardgame.R
 
 const val EXTRA_BOARD_SIZE = "EXTRA_BOARD_SIZE"
+const val EXTRA_GAME_NAME = "EXTRA_GAME_NAME"
 
 val DEFAULT_IMAGES = listOf(
     R.drawable.cypress_falls_park,

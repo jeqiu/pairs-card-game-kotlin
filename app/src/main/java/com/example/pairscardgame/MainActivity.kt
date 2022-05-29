@@ -46,10 +46,6 @@ class MainActivity : AppCompatActivity() {
         tvNumFlips = findViewById(R.id.tvNumFlips)
         tvNumPairs = findViewById(R.id.tvNumPairs)
 
-//        val intent = Intent(this, CreateActivity::class.java)
-//        intent.putExtra(EXTRA_BOARD_SIZE, BoardSize.EASY)
-//        startActivity(intent)
-
         setupBoard()
     }
 
