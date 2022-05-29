@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pairscardgame.models.BoardSize
 import com.example.pairscardgame.models.PairCard
+import com.squareup.picasso.Picasso
 
 class BoardAdaptor(
     private val context: Context,
@@ -30,23 +31,6 @@ class BoardAdaptor(
         fun onCardClick(position: Int)
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val imageButton = itemView.findViewById<ImageButton>(R.id.imageButton)
-
-        fun bind(position: Int) {
-            val gameCard = cards[position]
-            imageButton.setImageResource(if (gameCard.isFaceUp) gameCard.identifier else R.drawable.ic_card)
-
-            imageButton.alpha = if (gameCard.isMatched) .4f else 1.0f
-//            val colorStateList = if (gameCard.isMatched) ContextCompat.getColorStateList(context, R.color.color_gray) else null
-//            ViewCompat.setBackgroundTintList(imageButton, colorStateList)
-
-            imageButton.setOnClickListener {
-                Log.i(TAG, "Clicked on position $position")
-                cardClickListener.onCardClick(position)
-            }
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val cardHeight = parent.height / boardSize.getHeight() - (2 * MARGIN_SIZE)
@@ -77,6 +61,32 @@ class BoardAdaptor(
 // shorter syntax for return value: override fun getItemCount() = boardSize.numCards
     override fun getItemCount(): Int {
         return boardSize.numCards
+    }
+
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val imageButton = itemView.findViewById<ImageButton>(R.id.imageButton)
+
+        fun bind(position: Int) {
+            val gameCard = cards[position]
+            if (gameCard.isFaceUp) {
+                if (gameCard.imageUrl != null) {
+                    Picasso.get().load(gameCard.imageUrl).into(imageButton)
+                } else {
+                    imageButton.setImageResource(gameCard.identifier)
+                }
+            } else {
+                imageButton.setImageResource(R.drawable.ic_card)
+            }
+
+            imageButton.alpha = if (gameCard.isMatched) .4f else 1.0f
+//            val colorStateList = if (gameCard.isMatched) ContextCompat.getColorStateList(context, R.color.color_gray) else null
+//            ViewCompat.setBackgroundTintList(imageButton, colorStateList)
+
+            imageButton.setOnClickListener {
+                Log.i(TAG, "Clicked on position $position")
+                cardClickListener.onCardClick(position)
+            }
+        }
     }
 
 }

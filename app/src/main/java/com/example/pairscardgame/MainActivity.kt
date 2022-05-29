@@ -1,6 +1,7 @@
 package com.example.pairscardgame
 
 import android.animation.ArgbEvaluator
+import android.app.Activity
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import android.util.Log
@@ -18,8 +19,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pairscardgame.models.BoardSize
 import com.example.pairscardgame.models.PairGame
+import com.example.pairscardgame.models.UserImageList
 import com.example.pairscardgame.utils.EXTRA_BOARD_SIZE
+import com.example.pairscardgame.utils.EXTRA_GAME_NAME
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,6 +38,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rvBoard: RecyclerView
     private lateinit var tvNumFlips: TextView
     private lateinit var tvNumPairs: TextView
+
+    private val db = Firebase.firestore
+    private var gameName: String? = null
+    private var customGameImages: List<String>? = null
     private lateinit var pairGame: PairGame
     private lateinit var adaptor: BoardAdaptor
     private var boardSize: BoardSize = BoardSize.BEGINNER
@@ -78,6 +87,39 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == CREATE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val customGameName = data?.getStringExtra(EXTRA_GAME_NAME)
+            if (customGameName == null) {
+                Log.e(TAG, "Got null custom game name from CreateActivity")
+                return
+            }
+            downloadGame(customGameName)
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun downloadGame(customGameName: String) {
+        db.collection("matchingPairGames").document(customGameName).get()
+            .addOnSuccessListener { document ->
+                val userImageList = document.toObject(UserImageList::class.java)
+                if (userImageList?.images == null) {
+                    Log.e(TAG, "Invalid custom game data from Firestore")
+                    Snackbar.make(clRoot, "No such game found, '$customGameName'", Snackbar.LENGTH_LONG).show()
+                    return@addOnSuccessListener
+                }
+                val numCards = userImageList.images.size * 2
+                boardSize = BoardSize.getByValue(numCards)
+                customGameImages = userImageList.images
+                setupBoard()
+                gameName = customGameName
+
+            }
+            .addOnFailureListener { exception ->
+                Log.e(TAG, "Exception when retrieving game", exception)
+            }
+    }
+
     private fun showCreationDialog() {
         val boardSizeView = LayoutInflater.from(this).inflate(R.layout.dialog_board_size, null)
         val radioGroupSize = boardSizeView.findViewById<RadioGroup>(R.id.radioGroup)
@@ -113,6 +155,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.rbMedium -> BoardSize.MEDIUM
                 else -> BoardSize.HARD
             }
+            gameName = null
+            customGameImages = null
             setupBoard()
         })
     }
@@ -128,6 +172,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupBoard() {
+        supportActionBar?.title = gameName ?: getString(R.string.app_name)
         when (boardSize) {
             BoardSize.BEGINNER -> {
                 tvNumFlips.text = "Beginner: 4 x 2"
@@ -147,7 +192,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         tvNumPairs.setTextColor((ContextCompat.getColor(this, R.color.color_progress_none)))
-        pairGame = PairGame(boardSize)
+        pairGame = PairGame(boardSize, customGameImages)
 
         adaptor = BoardAdaptor(this, boardSize, pairGame.cards, object : BoardAdaptor.CardClickListener{
             override fun onCardClick(position: Int) {

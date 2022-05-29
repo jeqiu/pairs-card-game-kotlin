@@ -2,7 +2,10 @@ package com.example.pairscardgame.models
 
 import com.example.pairscardgame.utils.DEFAULT_IMAGES
 
-class PairGame(private val boardSize: BoardSize) {
+class PairGame(
+    private val boardSize: BoardSize,
+    private val customImages: List<String>?,
+) {
 
     val cards: List<PairCard>
     var numPairsFound = 0
@@ -11,9 +14,15 @@ class PairGame(private val boardSize: BoardSize) {
     private var indexOfSingleFlippedCard: Int? = null
 
     init {
-        val chosenImages : List<Int> = DEFAULT_IMAGES.shuffled().take(boardSize.getNumPairs())
-        val randomizedImages = (chosenImages + chosenImages).shuffled()
-        cards = randomizedImages.map{ PairCard(it)}
+        if (customImages == null) {
+            val chosenImages : List<Int> = DEFAULT_IMAGES.shuffled().take(boardSize.getNumPairs())
+            val randomizedImages = (chosenImages + chosenImages).shuffled()
+            cards = randomizedImages.map{ PairCard(it)}
+        } else {
+            val randomizedImages = (customImages + customImages).shuffled()
+            cards = randomizedImages.map { PairCard(it.hashCode(), it) }
+        }
+
     }
 
     fun flipCard(position: Int): Boolean {

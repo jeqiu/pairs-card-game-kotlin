@@ -179,8 +179,8 @@ class CreateActivity : AppCompatActivity() {
                 } else {
                     handleImageUploadingToFirebase(customGameName)
                 }
-            }.addOnFailureListener{
-                Log.e(TAG, "Encountered error when saving new game")
+            }.addOnFailureListener{ exception ->
+                Log.e(TAG, "Encountered error when saving new game", exception)
                 Toast.makeText(this, "Encountered error when saving new game", Toast.LENGTH_SHORT).show()
                 buttonSave.isEnabled = true
             }
