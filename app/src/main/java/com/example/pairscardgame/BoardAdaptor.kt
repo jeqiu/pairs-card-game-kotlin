@@ -70,7 +70,7 @@ class BoardAdaptor(
             val gameCard = cards[position]
             if (gameCard.isFaceUp) {
                 if (gameCard.imageUrl != null) {
-                    Picasso.get().load(gameCard.imageUrl).into(imageButton)
+                    Picasso.get().load(gameCard.imageUrl).placeholder(R.drawable.ic_placeholder_image).into(imageButton)
                 } else {
                     imageButton.setImageResource(gameCard.identifier)
                 }
