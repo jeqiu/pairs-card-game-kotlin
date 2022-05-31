@@ -3,6 +3,7 @@ package com.example.pairscardgame
 import android.animation.ArgbEvaluator
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import androidx.core.content.ContextCompat
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +25,7 @@ import com.example.pairscardgame.models.PairGame
 import com.example.pairscardgame.models.UserImageList
 import com.example.pairscardgame.utils.EXTRA_BOARD_SIZE
 import com.example.pairscardgame.utils.EXTRA_GAME_NAME
+import com.github.jinatonic.confetti.CommonConfetti
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -195,19 +197,19 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = gameName ?: getString(R.string.app_name)
         when (boardSize) {
             BoardSize.BEGINNER -> {
-                tvNumFlips.text = "Beginner: 4 x 2"
+                tvNumFlips.text = "Beginner"
                 tvNumPairs.text = "Pairs: 0 / 4"
             }
             BoardSize.EASY -> {
-                tvNumFlips.text = "Easy: 4 x 3"
+                tvNumFlips.text = "Easy"
                 tvNumPairs.text = "Pairs: 0 / 6"
             }
             BoardSize.MEDIUM -> {
-                tvNumFlips.text = "Medium: 4 x 4"
+                tvNumFlips.text = "Medium"
                 tvNumPairs.text = "Pairs: 0 / 8"
             }
             BoardSize.HARD -> {
-                tvNumFlips.text = "Hard: 6 x 4"
+                tvNumFlips.text = "Hard"
                 tvNumPairs.text = "Pairs: 0 / 12"
             }
         }
@@ -247,6 +249,9 @@ class MainActivity : AppCompatActivity() {
             tvNumPairs.text = "Pairs: ${pairGame.numPairsFound} / ${boardSize.getNumPairs()}"
             if (pairGame.haveWonGame()) {
                 Snackbar.make(clRoot, "You won!", Snackbar.LENGTH_LONG).show()
+                CommonConfetti
+                    .rainingConfetti(clRoot, intArrayOf(Color.YELLOW, Color.BLUE, Color.MAGENTA, Color.RED, Color.GREEN))
+                    .oneShot();
             }
         }
         tvNumFlips.text = "Flips: ${pairGame.getNumFlips()}"

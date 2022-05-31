@@ -15,7 +15,7 @@
             android:id="@+id/llCardGame"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/design_default_color_secondary_variant"
+            android:background="@color/theme_color_2"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"

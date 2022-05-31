@@ -9,5 +9,12 @@
     <color name="white">#FFFFFFFF</color>
     <color name="color_gray">#E0E0E0</color>
     <color name="color_progress_none">#C93744</color>
-    <color name="color_progress_full">#228C22</color>
+    <color name="color_progress_full">#35BA0d</color>
+
+    <color name="theme_color_1">#023844</color>
+    <color name="theme_color_2">#078dab</color>
+    <color name="theme_color_3">#057188</color>
+<!--    <color name="theme_color_1">#023844</color>-->
+<!--    <color name="theme_color_2">#078dab</color>-->
+<!--    <color name="theme_color_3">#057188</color>-->
 </resources>
